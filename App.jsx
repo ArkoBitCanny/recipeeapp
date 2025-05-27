@@ -1,43 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, SafeAreaView, StyleSheet, Platform } from 'react-native';
-import TopbarComponent from './Components/TopbarComponent';
-import DropdownMenu from './Components/DropdownMenu';
-import { useDispatch } from 'react-redux';
-import { backendDishData, randomApiData } from './redux/Slice/dishesRedux';
-import FavoriteDishes from './Components/FavoriteDishes';
+import React from 'react';
+import Home from './Components/Home';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SignupComponent from './Components/SignupComponent';
+
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
 
-  const dispatch=useDispatch();
-  
-  useEffect(() => {
-    dispatch(backendDishData());
-    dispatch(randomApiData());
-  }, []);
-
   return (
-    <SafeAreaView>
-      <ScrollView style={Platform.OS === 'android' ? style.containerFluid : style.containerFluidIos}>
-        <TopbarComponent />
-        <FavoriteDishes/>
-        <DropdownMenu />
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {/* <Stack.Screen name='Home' component={Home} /> */}
+        <Stack.Screen name="Sign In Form" component={SignupComponent} />
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
 
-const style = StyleSheet.create({
-  containerFluid: {
-    width: '96%',
-    marginHorizontal: "auto",
-    marginTop: 57,
-    backgroundColor: '#fff'
-  },
-  containerFluidIos: {
-    width: '96%',
-    marginHorizontal: "auto",
-    backgroundColor: '#fff'
-  }
-})
-
-export default App
+export default App;
