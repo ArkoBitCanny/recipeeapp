@@ -6,7 +6,7 @@ import DropdownMenu from './DropdownMenu';
 import { useDispatch } from 'react-redux';
 import { backendDishData, randomApiData } from '../redux/Slice/dishesRedux';
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -14,16 +14,16 @@ const Home = ({navigation}) => {
         dispatch(randomApiData());
 
         const backAction = () => {
-            BackHandler.exitApp(); 
-            return true; 
-          };
-      
-          const backHandler = BackHandler.addEventListener(
+            BackHandler.exitApp();
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
             'hardwareBackPress',
             backAction
-          );
-      
-          return () => backHandler.remove();
+        );
+
+        return () => backHandler.remove();
 
     }, []);
     return (
