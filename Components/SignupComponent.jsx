@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import React, { useState, useTransition } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
 
@@ -132,6 +132,7 @@ const SignupComponent = ({navigation}) => {
 const style = StyleSheet.create({
     containerFluid: {
         width: '96%',
+        height:'100%',
         marginHorizontal: "auto",
         backgroundColor: '#fff',
         marginBottom: 40

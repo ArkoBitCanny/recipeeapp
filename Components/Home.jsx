@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, SafeAreaView, StyleSheet, Platform } from 'react-native';
+import { ScrollView, SafeAreaView, StyleSheet, Platform, BackHandler } from 'react-native';
 import TopbarComponent from './TopbarComponent';
 import FavoriteDishes from './FavoriteDishes'
 import DropdownMenu from './DropdownMenu';
@@ -12,6 +12,19 @@ const Home = ({navigation}) => {
     useEffect(() => {
         dispatch(backendDishData());
         dispatch(randomApiData());
+
+        const backAction = () => {
+            BackHandler.exitApp(); 
+            return true; 
+          };
+      
+          const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+          );
+      
+          return () => backHandler.remove();
+
     }, []);
     return (
         <SafeAreaView>
