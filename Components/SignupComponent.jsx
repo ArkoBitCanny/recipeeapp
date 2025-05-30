@@ -1,8 +1,8 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
 
-const SignupComponent = () => {
+const SignupComponent = ({navigation}) => {
     const [toggle, setToggle] = useState('login');
     const [userDetail, setUserDetail] = useState({
         name: "",
@@ -10,36 +10,53 @@ const SignupComponent = () => {
         password: "",
         cPass: ""
     })
+    const [loading, startTransition] = useTransition();
+
+    const handelChange = (name, value) => {
+        setUserDetail({ ...userDetail, [name]: value });
+    }
 
     const handelForm = () => {
         if (toggle === 'login') setToggle('signup');
         else setToggle('login');
     }
 
-    const handelSubmit = async () => {
-        console.log("Hewllo");
-        try {
-            const data=await fetch('http://localhost:3000/api/user/login',{
-                method:"POST",
-                headers:{
-                    'Content-Type': 'application/json'
-                },
-                body:JSON.stringify({
-                    mail:'test2@gmail.com',
-                    password:'12345678'
+    const handelSubmit = () => {
+        const url = toggle === 'login' ?
+            'https://da21-2409-40e0-40-3fe0-a143-498b-9774-3ee5.ngrok-free.app/api/user/login'
+            :
+            'https://da21-2409-40e0-40-3fe0-a143-498b-9774-3ee5.ngrok-free.app/api/user/signup';
+
+        startTransition(async () => {
+            console.log(userDetail);
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: userDetail.name.trim(),
+                        mail: userDetail.mail.trim(),
+                        password: userDetail.password.trim()
+                    })
                 })
-            })
-            const parsedData=await data.json();
-            console.log(parsedData);
-        } catch (error) {
-            console.log(error);
-        }
+                const data = await response.json();
+                console.log(data);
+                if(data.success){
+                    navigation.navigate('Home');
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        })
     }
 
     return (
         <SafeAreaView>
             <View style={style.containerFluid}>
-                <Text style={{ fontSize: 40, fontWeight: '800', marginTop: 30, marginHorizontal: 'auto', color: 'orange' }}>
+                <Text style={{ fontSize: 40, fontWeight: '800', marginTop: 30, marginHorizontal: 'auto', color: '#9695ed' }}>
                     {
                         toggle === 'login' ? "Log In" : "Sign Up"
                     }
@@ -53,9 +70,8 @@ const SignupComponent = () => {
                                 placeholder='Enter Your Name'
                                 placeholderTextColor='#ccc'
                                 style={style.inputBox}
-                                onChangeText={(text) => {
-                                    setUserDetail({ ...userDetail }, userDetail.name = text);
-                                }}
+                                value={userDetail.name}
+                                onChangeText={(text) => handelChange('name', text)}
                             />
                         </View>
                     }
@@ -64,13 +80,9 @@ const SignupComponent = () => {
                         <TextInput
                             placeholder='Enter Your Email'
                             placeholderTextColor='#ccc'
-                            textContentType='emailAddress'
-                            autoCompleteType="email"
-                            keyboardType="email-address"
                             style={style.inputBox}
-                            onChangeText={(text) => {
-                                setUserDetail({ ...userDetail }, userDetail.mail = text);
-                            }}
+                            value={userDetail.mail}
+                            onChangeText={(text) => handelChange('mail', text)}
                         />
                     </View>
                     <View style={{ width: '100%' }}>
@@ -81,9 +93,8 @@ const SignupComponent = () => {
                             secureTextEntry={true}
                             textContentType="password"
                             style={style.inputBox}
-                            onChangeText={(text) => {
-                                setUserDetail({ ...userDetail }, userDetail.password = text);
-                            }}
+                            value={userDetail.password}
+                            onChangeText={(text) => handelChange('password', text)}
                         />
                     </View>
                     {toggle !== 'login' &&
@@ -95,14 +106,13 @@ const SignupComponent = () => {
                                 secureTextEntry={true}
                                 textContentType="password"
                                 style={style.inputBox}
-                                onChangeText={(text) => {
-                                    setUserDetail({ ...userDetail }, userDetail.cPass = text);
-                                }}
+                                value={userDetail.cPass}
+                                onChangeText={(text) => handelChange('cPass', text)}
                             />
                         </View>}
                 </View>
                 <TouchableOpacity style={{ marginBottom: 45 }} onPress={handelSubmit}>
-                    <Text style={{ width: '50%', marginHorizontal: 'auto', textAlign: 'center', fontSize: 18, fontWeight: '800', backgroundColor: 'orange', color: '#fff', paddingVertical: 14, borderRadius: 6 }}>{toggle === 'login' ? "Log in" : "Sign up"}</Text>
+                    <Text style={{ width: '50%', marginHorizontal: 'auto', textAlign: 'center', fontSize: 18, fontWeight: '800', backgroundColor: '#9695ed', color: '#fff', paddingVertical: 14, borderRadius: 6 }}>{toggle === 'login' ? loading ? "submitting" : "Log in" : loading ? "submitting" : "Sign up"}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={handelForm}>

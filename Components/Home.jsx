@@ -6,7 +6,7 @@ import DropdownMenu from './DropdownMenu';
 import { useDispatch } from 'react-redux';
 import { backendDishData, randomApiData } from '../redux/Slice/dishesRedux';
 
-const Home = () => {
+const Home = ({navigation}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {

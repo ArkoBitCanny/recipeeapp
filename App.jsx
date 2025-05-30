@@ -11,9 +11,9 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {/* <Stack.Screen name='Home' component={Home} /> */}
+      <Stack.Navigator initialRouteName='Sign In Form' screenOptions={{headerStyle:{backgroundColor:'#9695ed'}}}>
         <Stack.Screen name="Sign In Form" component={SignupComponent} />
+        <Stack.Screen name='Home' component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   )
